@@ -45,7 +45,8 @@ RUN mv -v /usr/share/postgresql/$PG_MAJOR/postgresql.conf.sample /usr/share/post
 	&& sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/share/postgresql/postgresql.conf.sample
 
 RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
-
+RUN mkdir -p /home/postgres && chown -R postgres /home/postgres
+RUN cd /home/postgres
 ENV PATH /usr/lib/postgresql/$PG_MAJOR/bin:$PATH
 ENV PGDATA /var/lib/postgresql/data
 VOLUME /var/lib/postgresql/data
