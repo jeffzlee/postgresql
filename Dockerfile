@@ -46,7 +46,9 @@ RUN mv -v /usr/share/postgresql/$PG_MAJOR/postgresql.conf.sample /usr/share/post
 
 RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
 RUN mkdir -p /home/postgres && chmod -R 777 /home/postgres
+RUN mkdir -p /home/odoo && chmod -R 777 /home/odoo
 RUN cd /home/postgres && touch .psql_history && chmod -R 777 /home/postgres/.psql_history
+RUN cd /home/odoo && touch .psql_history && chmod -R 777 /home/odoo/.psql_history
 ENV PATH /usr/lib/postgresql/$PG_MAJOR/bin:$PATH
 ENV PGDATA /var/lib/postgresql/data
 VOLUME /var/lib/postgresql/data
