@@ -6,7 +6,8 @@ if [ "${1:0:1}" = '-' ]; then
 fi
 
 if [ "$1" = 'postgres' ]; then
-	mkdir -p "$PGDATA"
+        # ENV PGDATA /var/lib/postgresql/data; VOLUME /var/lib/postgresql/data
+	mkdir -p "$PGDATA"   
 	chmod 700 "$PGDATA"
 	chown -R postgres "$PGDATA"
 
