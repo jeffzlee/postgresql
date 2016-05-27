@@ -16,7 +16,9 @@ if [ "$1" = 'postgres' ]; then
 
 	# look specifically for PG_VERSION, as it is expected in the DB dir
 	if [ ! -s "$PGDATA/PG_VERSION" ]; then
-		eval "gosu postgres initdb $POSTGRES_INITDB_ARGS"
+	        # initdb [option...] [--pgdata | -D] directory, 
+	        # initdb creates a new PostgreSQL database cluster. A database cluster is a collection of databases that are managed by a single server instance.
+		eval "gosu postgres initdb $POSTGRES_INITDB_ARGS" 
 
 		# check password first so we can output the warning before postgres
 		# messes it up
