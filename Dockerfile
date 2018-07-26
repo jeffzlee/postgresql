@@ -18,44 +18,10 @@ RUN set -x \
 	&& gosu nobody true \
 	&& apt-get purge -y --auto-remove ca-certificates wget
 	# make the "en_US.UTF-8" locale so postgres will be utf-8 enabled by default
-RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
-	&& localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
 
-RUN mkdir /docker-entrypoint-initdb.d
+COPY entrypoint.sh /
 
-RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
-
-ENV PG_MAJOR 9.5
-ENV PG_VERSION 9.5.3-1.pgdg80+1
-
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
-
-RUN apt-get update \
-	&& apt-get install -y postgresql-common \
-	&& sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
-	&& apt-get install -y \
-		postgresql-$PG_MAJOR=$PG_VERSION \
-		postgresql-contrib-$PG_MAJOR=$PG_VERSION \
-	&& rm -rf /var/lib/apt/lists/*
-
-# make the sample config easier to munge (and "correct by default")
-RUN mv -v /usr/share/postgresql/$PG_MAJOR/postgresql.conf.sample /usr/share/postgresql/ \
-	&& ln -sv ../postgresql.conf.sample /usr/share/postgresql/$PG_MAJOR/ \
-	&& sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/share/postgresql/postgresql.conf.sample
-
-RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
-RUN mkdir -p /home/postgres && chmod -R 777 /home/postgres
-RUN mkdir -p /home/odoo && chmod -R 777 /home/odoo
-RUN cd /home/postgres && touch .psql_history && chmod -R 777 /home/postgres/.psql_history
-RUN cd /home/odoo && touch .psql_history && chmod -R 777 /home/odoo/.psql_history
-ENV PATH /usr/lib/postgresql/$PG_MAJOR/bin:$PATH
-ENV PGDATA /var/lib/postgresql/data
-VOLUME /var/lib/postgresql/data
-
-COPY docker-entrypoint.sh /
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
-RUN chmod -R 777 /docker-entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+RUN chmod -R 777 /entrypoint.sh
 EXPOSE 5432
 CMD ["postgres"]
