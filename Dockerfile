@@ -1,5 +1,5 @@
 FROM debian:jessie
-
+ENV DEBIAN_FRONTEND noninteractive
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
  
  # grab gosu for easy step-down from root
