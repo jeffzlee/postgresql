@@ -24,4 +24,4 @@ COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 RUN chmod -R 777 /entrypoint.sh
 EXPOSE 5432
-CMD ["postgres"]
+CMD [""]
